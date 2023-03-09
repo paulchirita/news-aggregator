@@ -3,11 +3,6 @@ from django.db import models
 
 # Create your models here.
 
-class User(models.Model):
-    username = models.CharField(max_length=50)
-    password = models.CharField(max_length=50)
-    name = models.CharField(max_length=50)
-
 
 class NewsWebsite(models.Model):
     name = models.CharField(max_length=50)
@@ -28,19 +23,13 @@ class Article(models.Model):
     nrSaves = models.IntegerField
 
 
-class SavedArticle(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    article = models.ForeignKey(Article, on_delete=models.CASCADE)
-
-
-class UserPreferredNewsWebsite(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    newsWebsite = models.ForeignKey(NewsWebsite, on_delete=models.CASCADE)
-
-
-class UserPreferredTopic(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
+class User(models.Model):
+    username = models.CharField(max_length=50)
+    password = models.CharField(max_length=50)
+    name = models.CharField(max_length=50)
+    savedArticles = models.ManyToManyField(Article)
+    preferredTopics = models.ManyToManyField(Topic)
+    preferredNewsWebsites = models.ManyToManyField(NewsWebsite)
 
 
 class Comment(models.Model):
