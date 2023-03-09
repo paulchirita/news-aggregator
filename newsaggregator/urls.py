@@ -15,6 +15,9 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter, OrderingFilter
+from django_filters import rest_framework as filters
 from mainApp import views
 from rest_framework import routers, serializers, viewsets
 from mainApp.models import Article, NewsWebsite, Topic
@@ -38,9 +41,26 @@ class NewsWebsiteSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['name']
 
 
+class ArticleFilter(filters.FilterSet):
+    min_date = filters.DateTimeFilter(field_name="date", lookup_expr='gte')
+    max_date = filters.DateTimeFilter(field_name="date", lookup_expr='lte')
+    min_nr_likes = filters.NumberFilter(field_name="nrLikes", lookup_expr='gte')
+    max_nr_likes = filters.NumberFilter(field_name="nrLikes", lookup_expr='lte')
+    min_nr_saves = filters.NumberFilter(field_name="nrSaves", lookup_expr='gte')
+    max_nr_saves = filters.NumberFilter(field_name="nrSaves", lookup_expr='lte')
+
+    class Meta:
+        model = Article
+        fields = ['title', 'newsWebsite__name', 'date', 'topic__name', 'nrLikes', 'nrSaves']
+
+
 class ArticleViewSet(viewsets.ModelViewSet):
     queryset = Article.objects.all().order_by('title')
     serializer_class = ArticleSerializer
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_class = ArticleFilter
+    order_fields = ['title', 'newsWebsite__name', 'date', 'topic__name', 'nrLikes', 'nrSaves']
+    search_fields = ['title', 'newsWebsite__name', 'date', 'topic__name', 'nrLikes', 'nrSaves']
 
 
 class NewsWebsiteViewSet(viewsets.ModelViewSet):
@@ -61,6 +81,6 @@ router.register(r'topics', TopicWebsiteViewSet)
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", views.Index.as_view(), name='index'),
-    path('', include(router.urls)),
+    path('api/', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
