@@ -18,7 +18,7 @@ from django.urls import path, include
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters import rest_framework as filters
-from mainApp import views
+from mainApp import views as mainapp_views
 from rest_framework import routers, serializers, viewsets
 from mainApp.models import Article, NewsWebsite, Topic
 
@@ -35,7 +35,7 @@ class NewsWebsiteSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['name', 'url']
 
 
-class NewsWebsiteSerializer(serializers.HyperlinkedModelSerializer):
+class TopicSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Topic
         fields = ['name']
@@ -68,19 +68,23 @@ class NewsWebsiteViewSet(viewsets.ModelViewSet):
     serializer_class = NewsWebsiteSerializer
 
 
-class TopicWebsiteViewSet(viewsets.ModelViewSet):
+class TopicViewSet(viewsets.ModelViewSet):
     queryset = Topic.objects.all().order_by('name')
-    serializer_class = NewsWebsiteSerializer
+    serializer_class = TopicSerializer
 
 
 router = routers.DefaultRouter()
 router.register(r'articles', ArticleViewSet)
 router.register(r'newsWebsites', NewsWebsiteViewSet)
-router.register(r'topics', TopicWebsiteViewSet)
+router.register(r'topics', TopicViewSet)
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", views.Index.as_view(), name='index'),
+    path("feed/", mainapp_views.Newsfeed.as_view(), name='feed'),
+    path("", include("django.contrib.auth.urls")),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('register/', mainapp_views.register, name='register'),
     path('api/', include(router.urls)),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
