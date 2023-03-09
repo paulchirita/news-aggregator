@@ -1,0 +1,6 @@
+venv
+.idea
+*.xml
+*.pyc
+/migrations
+db.sqlite3
