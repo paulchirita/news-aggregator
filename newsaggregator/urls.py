@@ -14,10 +14,10 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
-from mainApp import views
+from mainApp import views as mainapp_views
 from rest_framework import routers, serializers, viewsets
 from mainApp.models import Article, NewsWebsite, Topic
+from django.urls import path, include
 
 
 class ArticleSerializer(serializers.HyperlinkedModelSerializer):
@@ -58,9 +58,13 @@ router.register(r'articles', ArticleViewSet)
 router.register(r'newsWebsites', NewsWebsiteViewSet)
 router.register(r'topics', TopicWebsiteViewSet)
 
+
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", views.Index.as_view(), name='index'),
-    path('', include(router.urls)),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    path("feed/", mainapp_views.Newsfeed.as_view(), name='feed'),
+    path("", include(router.urls)),
+    path("", include("django.contrib.auth.urls")),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('register/', mainapp_views.register, name='register'),
+
 ]

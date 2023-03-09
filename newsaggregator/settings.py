@@ -38,8 +38,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     'rest_framework',
-    'mainApp'
+    'mainApp',
 ]
+
+AUTH_USER_MODEL = 'mainApp.AppUser'
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -131,3 +133,9 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ]
 }
+
+# CRISPY_TEMPLATE_PACK="bootstrap2"
+
+LOGIN_REDIRECT_URL = "/feed/"
+LOGOUT_REDIRECT_URL = "/login/"
+
