@@ -10,17 +10,17 @@ class NewsWebsite(models.Model):
 
 
 class Topic(models.Model):
-    name = models.CharField
+    name = models.CharField(max_length=100, default="Test topic")
 
 
 class Article(models.Model):
     title = models.CharField(max_length=200)
     newsWebsite = models.ForeignKey(NewsWebsite, on_delete=models.CASCADE)
-    articleText = models.TextField
-    date = models.DateTimeField
+    articleText = models.TextField()
+    date = models.DateTimeField()
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
-    nrLikes = models.IntegerField
-    nrSaves = models.IntegerField
+    nrLikes = models.IntegerField()
+    nrSaves = models.IntegerField()
 
 
 class User(models.Model):
@@ -35,6 +35,6 @@ class User(models.Model):
 class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     article = models.ForeignKey(Article, on_delete=models.CASCADE)
-    time = models.DateTimeField
-    text = models.TextField
+    time = models.DateTimeField()
+    text = models.TextField()
     repliedTo = models.ForeignKey('self', on_delete=models.CASCADE)
