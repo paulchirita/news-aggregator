@@ -15,68 +15,16 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.filters import SearchFilter, OrderingFilter
-from django_filters import rest_framework as filters
 from mainApp import views as mainapp_views
-from rest_framework import routers, serializers, viewsets
-from mainApp.models import Article, NewsWebsite, Topic
-
-
-class ArticleSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Article
-        fields = ['title', 'newsWebsite', 'topic', 'articleText', 'date', 'nrLikes', 'nrSaves', 'slug']
-
-
-class NewsWebsiteSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = NewsWebsite
-        fields = ['name', 'url']
-
-
-class TopicSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Topic
-        fields = ['name']
-
-
-class ArticleFilter(filters.FilterSet):
-    min_date = filters.DateTimeFilter(field_name="date", lookup_expr='gte')
-    max_date = filters.DateTimeFilter(field_name="date", lookup_expr='lte')
-    min_nr_likes = filters.NumberFilter(field_name="nrLikes", lookup_expr='gte')
-    max_nr_likes = filters.NumberFilter(field_name="nrLikes", lookup_expr='lte')
-    min_nr_saves = filters.NumberFilter(field_name="nrSaves", lookup_expr='gte')
-    max_nr_saves = filters.NumberFilter(field_name="nrSaves", lookup_expr='lte')
-
-    class Meta:
-        model = Article
-        fields = ['title', 'newsWebsite__name', 'date', 'topic__name', 'nrLikes', 'nrSaves', 'slug']
-
-
-class ArticleViewSet(viewsets.ModelViewSet):
-    queryset = Article.objects.all().order_by('title')
-    serializer_class = ArticleSerializer
-    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filterset_class = ArticleFilter
-    order_fields = ['title', 'newsWebsite__name', 'date', 'topic__name', 'nrLikes', 'nrSaves', 'slug']
-    search_fields = ['title', 'newsWebsite__name', 'date', 'topic__name', 'nrLikes', 'nrSaves', 'slug']
-
-
-class NewsWebsiteViewSet(viewsets.ModelViewSet):
-    queryset = NewsWebsite.objects.all().order_by('name')
-    serializer_class = NewsWebsiteSerializer
-
-
-class TopicViewSet(viewsets.ModelViewSet):
-    queryset = Topic.objects.all().order_by('name')
-    serializer_class = TopicSerializer
-
+from rest_framework import routers
+from mainApp.api.viewsets import ArticleViewSet, NewsWebsiteViewSet, TopicViewSet, AppUserViewSet
 
 router = routers.DefaultRouter()
+router.register(r'appUsers', AppUserViewSet)
 router.register(r'articles', ArticleViewSet)
 router.register(r'newsWebsites', NewsWebsiteViewSet)
 router.register(r'topics', TopicViewSet)
+
 
 
 urlpatterns = [

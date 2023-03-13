@@ -1,6 +1,5 @@
-from django.contrib.auth.mixins import LoginRequiredMixin 
-from django.shortcuts import render
 from django.http import HttpResponseNotFound
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views import View
 from django.shortcuts import render, redirect
 from .forms import RegisterForm

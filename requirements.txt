@@ -1,5 +1,4 @@
 django
-django-crispy-forms
 django-rest-framework
 django_filter==22.1
 djangorestframework==3.14.0
