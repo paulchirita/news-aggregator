@@ -19,7 +19,7 @@ class Article(models.Model):
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name="articles")
     nrLikes = models.IntegerField()
     nrSaves = models.IntegerField()
-
+    slug = models.SlugField(max_length=200, unique=True)
 
 class AppUser(AbstractUser, models.Model):
     savedArticles = models.ManyToManyField(Article)

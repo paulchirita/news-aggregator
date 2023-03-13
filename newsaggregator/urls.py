@@ -26,7 +26,7 @@ from mainApp.models import Article, NewsWebsite, Topic
 class ArticleSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Article
-        fields = ['title', 'newsWebsite', 'topic', 'articleText', 'date', 'nrLikes', 'nrSaves']
+        fields = ['title', 'newsWebsite', 'topic', 'articleText', 'date', 'nrLikes', 'nrSaves', 'slug']
 
 
 class NewsWebsiteSerializer(serializers.HyperlinkedModelSerializer):
@@ -51,7 +51,7 @@ class ArticleFilter(filters.FilterSet):
 
     class Meta:
         model = Article
-        fields = ['title', 'newsWebsite__name', 'date', 'topic__name', 'nrLikes', 'nrSaves']
+        fields = ['title', 'newsWebsite__name', 'date', 'topic__name', 'nrLikes', 'nrSaves', 'slug']
 
 
 class ArticleViewSet(viewsets.ModelViewSet):
@@ -59,8 +59,8 @@ class ArticleViewSet(viewsets.ModelViewSet):
     serializer_class = ArticleSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class = ArticleFilter
-    order_fields = ['title', 'newsWebsite__name', 'date', 'topic__name', 'nrLikes', 'nrSaves']
-    search_fields = ['title', 'newsWebsite__name', 'date', 'topic__name', 'nrLikes', 'nrSaves']
+    order_fields = ['title', 'newsWebsite__name', 'date', 'topic__name', 'nrLikes', 'nrSaves', 'slug']
+    search_fields = ['title', 'newsWebsite__name', 'date', 'topic__name', 'nrLikes', 'nrSaves', 'slug']
 
 
 class NewsWebsiteViewSet(viewsets.ModelViewSet):
@@ -86,4 +86,5 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('register/', mainapp_views.register, name='register'),
     path('api/', include(router.urls)),
+    path('article/<slug:slug>/', mainapp_views.ArticleView.as_view(), name='article')
 ]

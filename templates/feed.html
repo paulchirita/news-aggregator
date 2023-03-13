@@ -6,9 +6,49 @@ Login
 
 
 {% block content %}
-    {% if user.is_authenticated %}
-        <h1>News feed</h1>
-    {% else %}
-        <h1>You need to login</h1>
-    {% endif %}
+  <h1>Recent articles</h1>
+  <style>
+    .feed {
+      display: flex;
+      flex-direction: column;
+      gap: 40px;
+    }
+
+    .article {
+      padding: 20px;
+      border: 1px solid gray;
+      border-radius: 5px;
+    }
+
+    .article h2 {
+      font-weight: bold;
+      font-size: 32px;
+      margin-top: 0;
+      margin-bottom: 10px;
+    }
+
+    .date {
+      font-size: 16px;
+      color: gray;
+      margin-bottom: 10px;
+    }
+  </style>
+  <div class="feed">
+      <!-- still need to add authentication here, removed for testing purposes -->
+      <!-- {% if user.is_authenticated %} -->
+      <!-- {% else %}
+        <p>You need to be logged in.</p>
+      {% endif %} -->
+      </div>
+      {% if articles.count == 0 %}
+          <p>No articles found.</p>
+      {% else %}
+          {% for article in articles %}
+              <div class="article">
+                  <a href="{% url 'article' slug=article.slug %}"><h2>{{ article.title }}</h2></a>
+                  <p class="date">Published on {{ article.date }} by {{ article.website }}</p>
+              </div>
+          {% endfor %}
+      {% endif %}
+  </div>
 {% endblock %}

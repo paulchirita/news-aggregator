@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}
+  {{ article.title }}
+{% endblock %}
+
+{% block content %}
+  <style>
+    .article {
+    border: 1px solid #999;
+    padding: 20px;
+    margin-bottom: 40px;
+    border-radius: 5px;
+    }
+
+    .article h1 {
+    font-weight: bold;
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 36px;
+    }
+
+    .date {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 20px;
+    }
+
+    .text {
+    line-height: 1.5;
+    font-size: 18px;
+    margin-bottom: 20px;
+    }
+
+    .comment {
+    border: 1px solid #999;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    }
+
+    .comment p {
+    margin-top: 0;
+    margin-bottom: 10px;
+    }
+
+    .comment-divider {
+    height: 1px;
+    background-color: #999;
+    margin-bottom: 10px;
+    }
+
+    .comment-form {
+    margin-top: 20px;
+    }
+
+    .comment-form label {
+    display: block;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    }
+
+    .comment-form input[type="text"],
+    .comment-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #999;
+    }
+
+    .comment-form input[type="submit"] {
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 16px;
+    padding: 10px;
+    }
+
+    .comment-form input[type="submit"]:hover {
+    background-color: #45a049;
+    }
+
+  </style>
+  <div class="article">
+    <h1>{{ article.title }}</h1>
+    <p class="date">Published on {{ article.date }} by {{ article.website }}</p>
+    <p class="text">{{ article.text }}</p>
+    <div class="comments">
+      <h2>Comments</h2>
+
+      {% if article.comments|length == 0 %}
+        <p>No comments yet...</p>
+      {% else %}
+        {% for comment in article.comments %}
+            <div class="comment">
+            <p>{{ comment.text }}</p>
+            <p>Commented by {{ comment.author }} at {{ comment.time }}</p>
+            </div>
+        {% endfor %}
+      {% endif %}
+
+      <!-- this needs to hook up to an api still -->
+      <form class="comment-form" method="post" action="#">
+        {% csrf_token %}
+        <label for="comment-text">Leave a comment</label>
+        <textarea id="comment-text" name="comment-text" rows="4" required></textarea>
+        <input type="submit" value="Submit">
+      </form>
+    </div>
+  </div>
+{% endblock %}
